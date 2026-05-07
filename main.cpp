@@ -117,16 +117,21 @@ void printPath(pair<int,int> exitcell,
 // STUDENTS IMPLEMENT DFS HERE
 // Add arguments, return type, and logic
 // ----------------------------------------------------------
-bool dfs(const vector<vector<int>>& maze, const pair<int,int> &exitcell, const vector<vector<bool>>& visited,
-    const vector<vector<int>>& parent_r, const vector<vector<bool>>& parent_c, int row, int col) {
+// bool found = dfs(ent_r, ent_c, maze, visited, parent_r, parent_c, exit_r, exit_c);
+bool dfs(int r, int c, const vector<vector<int>>& maze, vector<vector<bool>>& visited,
+    vector<vector<int>>& parent_r, vector<vector<int>>& parent_c, const int &exit_r, const int &exit_c) {
+    cout<<"At: ("<<r<<", "<<c<<")"<<endl;
     // Your code here
-    if (exitcell.first == row && exitcell.second == col) {return true;}
+    visited[r][c]=true;
+    if (exit_r == r && exit_c == c) {return true;}
     for (int i=0; i<4; i++) {
-        int r = row + dr[i];
-        int c = col + dc[i];
-        if (r<maze.size() && r>=0 && c<maze[r].size()
-            && c>=0 && maze[r][c] == 0 && !visited[r][c]) {
-
+        int nr = r + dr[i];
+        int nc = c + dc[i];
+        if (nr<maze.size() && nr>=0 && nc<maze[nr].size()
+            && nc>=0 && maze[nr][nc] == 0 && !visited[nr][nc]) {
+            parent_r[nr][nc] = r;
+            parent_c[nr][nc] = c;
+            return dfs(nr, nc, maze, visited, parent_r, parent_c, exit_r, exit_c);
         }
     }
     return false;
@@ -170,7 +175,7 @@ int main() {
     // STUDENT WORK:
     // Call your DFS, track visited, and fill parent_r and parent_c
     // ------------------------------------------------------
-    // bool found = dfs(ent_r, ent_c, maze, visited, parent_r, parent_c, exit_r, exit_c);
+    bool found = dfs(ent_r, ent_c, maze, visited, parent_r, parent_c, exit_r, exit_c);
 
     // ------------------------------------------------------
     // STUDENT WORK:
