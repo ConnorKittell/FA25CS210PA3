@@ -84,6 +84,45 @@ void printMaze(const vector<vector<int>>& maze,
     }
 }
 
+void printMazePost(const vector<vector<int>>& maze,
+               int ent_r, int ent_c, int exit_r, int exit_c,
+               const vector<vector<int>>& parent_r, const vector<vector<int>>& parent_c)
+{
+    int r = exit_r;
+    int c = exit_c;
+
+    vector<vector<int>> mazeSolved = maze;
+
+    // Walk backward from exit to entrance
+    while (!(r == ent_r && c == ent_c)) {
+        mazeSolved[r][c]=2;
+        int pr = parent_r[r][c];
+        int pc = parent_c[r][c];
+        r = pr;
+        c = pc;
+    }
+
+    int N = maze.size();
+    int M = maze[0].size();
+
+    cout << "\nMaze, Solved:\n";
+    for (int r = 0; r < N; r++) {
+        for (int c = 0; c < M; c++) {
+            if (r == ent_r && c == ent_c) {
+                cout << "\033[33mS\033[0m ";
+            } else if (r == exit_r && c == exit_c) {
+                cout << "\033[33mE\033[0m ";
+            } else if (mazeSolved[r][c]==2) {
+                cout <<"\033[33m0\033[0m ";
+            }
+            else {
+                cout << maze[r][c] << " ";
+            }
+        }
+        cout << "\n";
+    }
+}
+
 // ----------------------------------------------------------
 // DO NOT MODIFY: Print the reconstructed path
 // Students must fill parent[][] correctly during DFS
@@ -185,6 +224,8 @@ int main() {
     // ------------------------------------------------------
     if (found) {
         printPath(exitcell, parent_r, parent_c, ent_r, ent_c);
+
+        printMazePost(maze, ent_r, ent_c, exit_r, exit_c, parent_r, parent_c);
     } else {
         cout << "\nNo path exists.\n";
     }
